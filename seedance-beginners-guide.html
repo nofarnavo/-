@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איך יוצרים שיבוט AI — מדריך למתחילים</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: #fafaf8;
+  color: #1a1a1a;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+/* HERO */
+.hero {
+  background: #1a1a1a;
+  color: white;
+  text-align: center;
+  padding: 80px 24px 60px;
+}
+.hero-tag {
+  display: inline-block;
+  background: #d4f04a;
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 16px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+.hero h1 {
+  font-size: clamp(36px, 7vw, 72px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+.hero h1 em { color: #d4f04a; font-style: normal; }
+.hero p {
+  font-size: 18px;
+  color: #aaa;
+  max-width: 500px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+/* TOOLS BAR */
+.tools-bar {
+  background: #d4f04a;
+  padding: 18px 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tool-sep { opacity: 0.4; }
+
+/* MAIN */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+/* SECTION */
+.section { margin-bottom: 72px; }
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1a1a1a;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px 5px 8px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+}
+.step-badge-num {
+  background: #d4f04a;
+  color: #000;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+p { margin-bottom: 14px; color: #333; }
+
+/* BIG EXPLAIN BOX */
+.explain {
+  background: #f0f0ec;
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin: 24px 0;
+}
+.explain h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.explain p { margin: 0; color: #555; font-size: 15px; }
+
+/* GREEN BOX */
+.green-box {
+  background: #f0fbda;
+  border: 2px solid #d4f04a;
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+.green-box-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #5a8000;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.green-box p { color: #3a5000; margin: 0; font-size: 15px; }
+
+/* YELLOW BOX */
+.warn-box {
+  background: #fff8e6;
+  border: 2px solid #f0c040;
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin: 24px 0;
+  display: flex;
+  gap: 14px;
+}
+.warn-box .icon { font-size: 22px; flex-shrink: 0; }
+.warn-box p { color: #7a5500; margin: 0; font-size: 15px; }
+
+/* CHAT BUBBLES */
+.chat { margin: 28px 0; display: flex; flex-direction: column; gap: 12px; }
+
+.bubble {
+  max-width: 85%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.bubble-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.6;
+}
+.bubble.user {
+  background: #1a1a1a;
+  color: white;
+  align-self: flex-end;
+  border-bottom-left-radius: 4px;
+}
+.bubble.user .bubble-label { color: #d4f04a; }
+.bubble.claude {
+  background: #f0f0ec;
+  color: #1a1a1a;
+  align-self: flex-start;
+  border-bottom-right-radius: 4px;
+}
+.bubble.claude .bubble-label { color: #666; }
+
+/* FIELD LIST */
+.field-list { margin: 24px 0; display: flex; flex-direction: column; gap: 10px; }
+.field-item {
+  background: white;
+  border: 1.5px solid #e8e8e0;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.field-name {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #1a1a1a;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.field-desc { font-size: 14px; color: #555; }
+.field-desc strong { color: #1a1a1a; }
+
+/* PROMPT EXAMPLE */
+.prompt-box {
+  background: #1a1a1a;
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 2;
+  color: #aaa;
+  overflow-x: auto;
+}
+.prompt-box .k { color: #d4f04a; font-weight: 700; }
+.prompt-box .v { color: #e8e8e8; }
+.prompt-box .sep { color: #444; }
+
+/* DO/DONT */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.do-card, .dont-card {
+  border-radius: 14px;
+  padding: 20px;
+}
+.do-card { background: #f0fbda; border: 1.5px solid #c0e060; }
+.dont-card { background: #fff0f0; border: 1.5px solid #f0b0b0; }
+.do-card .label { color: #5a8000; font-weight: 800; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.dont-card .label { color: #c02020; font-weight: 800; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.do-card p { color: #3a5000; font-size: 14px; margin: 0; }
+.dont-card p { color: #801010; font-size: 14px; margin: 0; }
+
+/* DIVIDER */
+hr { border: none; border-top: 1.5px solid #e8e8e0; margin: 56px 0; }
+
+/* FOOTER */
+footer {
+  background: #1a1a1a;
+  color: #666;
+  text-align: center;
+  padding: 40px 24px;
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .do-dont { grid-template-columns: 1fr; }
+  .explain { padding: 20px; }
+  .prompt-box { padding: 20px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-tag">מדריך למתחילים</div>
+  <h1>איך יוצרים<br><em>שיבוט AI</em><br>ריאליסטי</h1>
+  <p>אפס ניסיון? אין בעיה. תוך כמה דקות תדעי בדיוק מה לעשות</p>
+</section>
+
+<div class="tools-bar">
+  <span>🤖 Claude — כותב את הפרומפט</span>
+  <span class="tool-sep">+</span>
+  <span>🎬 Seedance 2 — מייצר את הסרטון</span>
+</div>
+
+<main class="container">
+
+  <!-- STEP 1 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">1</div>מה זה בכלל?</div>
+    <h2>שיבוט AI — ההסבר הפשוט</h2>
+    <p>שיבוט AI זה סרטון שנוצר ממחשב — שבו <strong>את מופיעה</strong>, מדברת, הולכת, מחייכת — בלי שצילמת שום דבר.</p>
+    <p>כל מה שצריך זה <strong>תמונה אחת שלך</strong> וטקסט שמסביר מה רוצים שיקרה בסרטון.</p>
+
+    <div class="explain">
+      <h3>⚙️ ככה זה עובד בשלושה שלבים</h3>
+      <p>את מביאה תמונה שלך → קלוד כותב הוראות מפורטות → Seedance מייצר את הסרטון. זה הכל.</p>
+    </div>
+
+    <div class="explain">
+      <h3>📸 Seedance מייצר קליפ אחד בכל פעם</h3>
+      <p>כל generation = קליפ אחד של עד 15 שניות. סרטון ארוך יותר? מייצרים כמה קליפים ועורכים אותם יחד.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- STEP 2 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">2</div>התמונה שלך</div>
+    <h2>איזו תמונה<br>מביאים לקלוד?</h2>
+    <p>תמונה אחת ברורה של הפנים שלך — זה מה שנועל את המראה שלך בכל הסרטון.</p>
+
+    <div class="green-box">
+      <div class="green-box-label">✅ תמונה טובה</div>
+      <p>פנים ברורות, תאורה סבירה, הפנים במרכז התמונה. סלפי רגיל עובד מצוין.</p>
+    </div>
+
+    <div class="warn-box">
+      <span class="icon">⚠️</span>
+      <p><strong>תמונת השראה</strong> — אם מביאים תמונה של מישהי אחרת "בשביל הלוק" — חשוב לומר לקלוד "זה רק השראה, לא לשים בפרומפט". אחרת הפנים של המישהי האחרת ישתלטו על הסרטון.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- STEP 3 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">3</div>איך מדברים עם קלוד</div>
+    <h2>פשוט לתאר<br>מה רוצים</h2>
+    <p>לא צריך לדעת שום טרמינולוגיה. מדברים עם קלוד בדיוק כמו שמסבירים לחברה — קלוד מתרגם לפרומפט מקצועי שסידנס מבין.</p>
+
+    <div class="chat">
+      <div class="bubble user">
+        <div class="bubble-label">את</div>
+        אני רוצה סרטון קצר שאני יושבת בפארק על ספסל, אופנה בלוגרית, עם תנועות טבעיות ובסוף מתקרבת למצלמה ומסתכלת הצידה. 10 שניות.
+      </div>
+      <div class="bubble claude">
+        <div class="bubble-label">קלוד</div>
+        מבינה! אני אכין לך פרומפט מוכן. יש לך תמונת רפרנס של הפנים שלך? ומה הלבוש שתרצי שתלבשי בסרטון?
+      </div>
+      <div class="bubble user">
+        <div class="bubble-label">את</div>
+        כן, הנה התמונה שלי. ותביאי לה את הלבוש מהתמונה הזאת [תמונת השראה]. זה רק לבוש, לא לשים בפרומפט.
+      </div>
+      <div class="bubble claude">
+        <div class="bubble-label">קלוד</div>
+        מושלם. הנה הפרומפט המוכן — מעתיקה ישירות לסידנס עם ה-@image_1 שלך:
+      </div>
+    </div>
+
+    <div class="green-box">
+      <div class="green-box-label">💡 הטיפ הכי חשוב</div>
+      <p>ככל שתתארי יותר ספציפי — כך התוצאה טובה יותר. במקום "לבוש נחמד" → "ג'ינס קרוע בוהיר, חולצת בנד crop, נעלי Dr. Martens שחורות".</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- STEP 4 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">4</div>הפרומפט שקלוד כותב</div>
+    <h2>מה יוצא<br>מקלוד?</h2>
+    <p>קלוד מייצר פרומפט בפורמט מסוים שסידנס מבין. לא צריך להבין כל שדה — רק להכיר אותם בקצרה.</p>
+
+    <div class="field-list">
+      <div class="field-item">
+        <span class="field-name">FORMAT</span>
+        <div class="field-desc"><strong>כמה שניות ומה סוג הסרטון.</strong> למשל: 10s / single continuous shot / park bench</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">SUBJECT</span>
+        <div class="field-desc"><strong>הזהות שלך.</strong> תמיד: @image_1. זה מה שנועל את הפנים שלך.</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">WARDROBE</span>
+        <div class="field-desc"><strong>הלבוש בדיוק.</strong> קלוד מתאר כל פריט — חולצה, מכנסיים, נעליים, תכשיטים.</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">ENVIRONMENT</span>
+        <div class="field-desc"><strong>איפה זה קורה ואיזו תאורה.</strong> פארק, שדה תעופה, חדר, שעת זהב, ערב.</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">STYLE ANCHOR</span>
+        <div class="field-desc"><strong>האסתטיקה של הסרטון.</strong> vlog selfie, סרטון קולנועי, B-roll אופנה.</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">DELIVERY</span>
+        <div class="field-desc"><strong>האודיו.</strong> רוצים שהשיבוט ידבר? מקליטים את הקול שלכם ומצרפים לסידנס — הוא יתאים את השפתיים לקול. אין דיבור? כותבים No dialogue.</div>
+      </div>
+      <div class="field-item">
+        <span class="field-name">ACTION</span>
+        <div class="field-desc"><strong>מה בדיוק קורה בסרטון.</strong> כל תנועה, כל מבט, כל מחווה — בפרוזה.</div>
+      </div>
+    </div>
+
+    <p style="color:#888; font-size:14px;">דוגמה לפרומפט אמיתי שקלוד יכתוב:</p>
+
+    <div class="prompt-box">
+      <span class="k">FORMAT:</span> <span class="v">10s / single continuous shot / fashion blogger park bench</span><br><br>
+      <span class="k">SUBJECT:</span> <span class="v">@image_1.</span><br><br>
+      <span class="k">WARDROBE:</span> <span class="v">Oversized dark charcoal graphic crop tee, light wash<br>ripped baggy jeans, black Dr. Martens boots, small black<br>patent shoulder bag, long dark hair down and loose.</span><br><br>
+      <span class="k">ENVIRONMENT:</span> <span class="v">Outdoor public park, daytime. Wooden bench,<br>soft diffused natural light, pine trees in background.</span><br><br>
+      <span class="k">STYLE ANCHOR:</span> <span class="v">Fashion editorial vlog aesthetic, locked tripod.<br>Photorealistic — natural skin of @image_1 with visible pores,<br>real eye moisture. The realism IS the content.</span><br><br>
+      <span class="k">DELIVERY:</span> <span class="v">No dialogue.</span><br><br>
+      <span class="k">LOGIC RULE:</span> <span class="v">Single continuous shot. No cuts, no zoom.<br>Natural seated movement, no looping.</span><br><br>
+      <span class="k">NEGATIVE PROMPT:</span> <span class="v">No music, no captions.</span><br><br>
+      <span class="sep">---</span><br><br>
+      <span class="k">ACTION:</span><br><br>
+      <span class="v">0:00 to 0:10 — Locked tripod, eye-level, medium shot.<br><br>
+      @image_1 already seated on a wooden park bench, legs relaxed,<br>
+      hands loosely clasped. She shifts weight naturally, glances<br>
+      around with calm confidence. In the final 3 seconds she leans<br>
+      slowly toward the lens and turns her gaze to the left,<br>
+      holding there with a steady expression.</span>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- STEP 5 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">5</div>מכניסים לסידנס</div>
+    <h2>איך מכניסים<br>את הפרומפט?</h2>
+
+    <div class="explain">
+      <h3>📋 שלב 1 — מעתיקים</h3>
+      <p>את כל הפרומפט שקלוד כתב — מעתיקים כולו.</p>
+    </div>
+
+    <div class="explain">
+      <h3>📸 שלב 2 — מצרפים תמונות</h3>
+      <p>ב-Seedance מצרפים את תמונת הפנים שלך כ-@image_1. אם יש מזוודה / פרופ ספציפי — מצרפים כ-@image_2.</p>
+    </div>
+
+    <div class="explain">
+      <h3>🎙️ שלב 3 — רוצים שהשיבוט ידבר?</h3>
+      <p>כותבים באנגלית את מה שרוצים שיאמר → מקליטים את עצמכם אומרים את זה → מצרפים את ההקלטה לסידנס. הוא יתאים את השפתיים לקול שלכם אוטומטית.</p>
+    </div>
+
+    <div class="explain">
+      <h3>▶️ שלב 4 — Generate</h3>
+      <p>לוחצים Generate. Seedance מייצר את הקליפ. לוקח כמה שניות עד כמה דקות.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- STEP 6 -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">6</div>התוצאה לא מה שרצת?</div>
+    <h2>ככה מתקנים<br>בקלות</h2>
+    <p>חוזרים לקלוד ואומרים בדיוק מה לא עבד. קלוד יתקן נקודה אחת — לא כותבים הכל מחדש.</p>
+
+    <div class="chat">
+      <div class="bubble user">
+        <div class="bubble-label">את</div>
+        המצלמה זזה, רציתי שתהיה נעולה
+      </div>
+      <div class="bubble claude">
+        <div class="bubble-label">קלוד</div>
+        הסרתי את המילה "cinematic" — היא גורמת לסידנס לזוז. החלפתי ב-"static documentary". גם הוספתי "no camera movement" בסוף. הנה התיקון:
+      </div>
+    </div>
+
+    <div class="chat">
+      <div class="bubble user">
+        <div class="bubble-label">את</div>
+        הפנים נראות פלסטיק, לא אמיתיות
+      </div>
+      <div class="bubble claude">
+        <div class="bubble-label">קלוד</div>
+        הבעיה היא שהזווית רחוקה מדי — פנים בזווית רחוקה יוצאות פחות ריאליסטיות. קיצרתי את המרחק לפחות ל-medium close-up והוספתי "The realism IS the content" ל-STYLE ANCHOR.
+      </div>
+    </div>
+
+    <div class="green-box">
+      <div class="green-box-label">💡 העיקרון</div>
+      <p>תמיד לומר לקלוד <strong>מה ספציפית לא עבד</strong> — לא "הסרטון לא טוב". ככל שיותר ספציפי, כך התיקון יותר מדויק.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- DOS AND DONTS -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">7</div>טעויות נפוצות</div>
+    <h2>מה לעשות<br>ומה לא</h2>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <div class="label">✅ לעשות</div>
+        <p>לתאר לבוש ספציפי לגמרי — "ג'ינס כחול בהיר עם קרעים בברכיים"</p>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ לא לעשות</div>
+        <p>"לבוש אופנתי" — זה עמום מדי, סידנס ינחש ולרוב ינחש לא נכון</p>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <div class="label">✅ לעשות</div>
+        <p>תמונת השראה של לבוש מישהי אחרת → להגיד לקלוד "זה רק לבוש, לא לתייג"</p>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ לא לעשות</div>
+        <p>לתייג תמונה עם פנים של מישהי אחרת — הפנים שלה ישתלטו על הזהות שלך</p>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <div class="label">✅ לעשות</div>
+        <p>לומר לקלוד בדיוק מה לא עבד ולבקש תיקון ספציפי</p>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ לא לעשות</div>
+        <p>לשכתב את כל הפרומפט מחדש כשמשהו קטן לא עבד</p>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <div class="label">✅ לעשות</div>
+        <p>קליפ אחד לכל לוקיישן → עריכה = סרטון שלם</p>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ לא לעשות</div>
+        <p>לנסות 4 לוקיישנים שונים בקליפ אחד — יצא לא עקבי</p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- SUMMARY -->
+  <section class="section">
+    <div class="step-badge"><div class="step-badge-num">8</div>סיכום</div>
+    <h2>בקצרה —<br>3 שלבים</h2>
+
+    <div style="display:flex; flex-direction:column; gap:16px; margin-top:24px;">
+
+      <div style="background:#1a1a1a; color:white; border-radius:20px; padding:28px 32px; display:flex; gap:20px; align-items:flex-start;">
+        <div style="background:#d4f04a; color:#000; width:40px; height:40px; min-width:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">1</div>
+        <div>
+          <div style="font-weight:700; font-size:18px; margin-bottom:6px;">מביאים תמונה + מתארים לקלוד</div>
+          <div style="color:#aaa; font-size:15px;">תמונה ברורה של הפנים. מסבירים לקלוד בעברית רגילה מה רוצים — סצנה, לבוש, תנועות, תאורה, כמה שניות.</div>
+        </div>
+      </div>
+
+      <div style="background:#1a1a1a; color:white; border-radius:20px; padding:28px 32px; display:flex; gap:20px; align-items:flex-start;">
+        <div style="background:#d4f04a; color:#000; width:40px; height:40px; min-width:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">2</div>
+        <div>
+          <div style="font-weight:700; font-size:18px; margin-bottom:6px;">מעתיקים את הפרומפט לסידנס</div>
+          <div style="color:#aaa; font-size:15px;">קלוד מייצר פרומפט מקצועי. מעתיקים ומדביקים ב-Seedance עם תמונת הרפרנס.</div>
+        </div>
+      </div>
+
+      <div style="background:#1a1a1a; color:white; border-radius:20px; padding:28px 32px; display:flex; gap:20px; align-items:flex-start;">
+        <div style="background:#d4f04a; color:#000; width:40px; height:40px; min-width:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">3</div>
+        <div>
+          <div style="font-weight:700; font-size:18px; margin-bottom:6px;">תוצאה לא מושלמת? חוזרים לקלוד</div>
+          <div style="color:#aaa; font-size:15px;">אומרים בדיוק מה לא עבד. קלוד מתקן נקודה אחת. מנסים שוב.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="green-box" style="margin-top:32px;">
+      <div class="green-box-label">🎬 זכרי</div>
+      <p>לא צריך לדעת כלום על וידאו, פרומפטים, או AI. קלוד עושה את כל העבודה הטכנית — את רק צריכה לתאר מה רוצים לראות.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Claude AI + Seedance 2 · מדריך למתחילים</p>
+</footer>
+
+</body>
+</html>
